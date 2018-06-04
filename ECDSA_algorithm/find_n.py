@@ -1,8 +1,12 @@
 import random
+import sys
+sys.setrecursionlimit(100000)
+import datetime
+
+
 """ additon point a with point b in ecdsa modulo p """
 def ecdsa_add(point_elip_a,point_elip_b,p):
     ms_invert = pow(point_elip_b[0]-point_elip_a[0],p-2,p)
-    print ms_invert
     c = ((point_elip_b[1]-point_elip_a[1])*ms_invert) % p
     rx = (c**2 - point_elip_a[0]-point_elip_b[0]) % p
     ry = (c*(point_elip_a[0]-rx) - point_elip_a[1]) % p
@@ -54,20 +58,19 @@ def ecdsa_verify(z ,r,s, Q,G,n,p):
         return True
     else:
         return False
-p = 67
-z =17
-n = 79
+#n = 79
 G = (2,22)
-d = 2 # private key
-r , s = ecdsa_sign(z,G,n,d,p)
-# gen pub key
-Q = ecdsa_mul(G,d,p)
-print('private key:('+ str(Q[0])+','+str(Q[1])+')')
-print('r = ' + str(r) + ' s = '+str(s))
-print(ecdsa_verify(z,r,s,Q,G,n,p))
-
-# p = (6,25)
-# q = (2,22)
-# m = 67
-# print ecdsa_add(p,q,m)
+n = 1
+p = 67
+# for i in range(1,20):
+# 	print str(ecdsa_mul(G,n,p)[0]) + ','+str(ecdsa_mul(G,n,p)[1])
+# 	n+=1
+while True:
+	# if ecdsa_mul(G,n,p)[0]==0 and ecdsa_mul(G,n,p)[1]==0:
+	if ecdsa_mul(G,n,p)[0]==0:
+		if ecdsa_mul(G,n,p)[1]==0:
+			print n
+			print datetime.datetime.now() 
+			break
+	n+=1
 
